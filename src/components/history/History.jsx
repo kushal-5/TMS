@@ -14,7 +14,7 @@ import ProgressTab from "../history/historytabs/ProgressTab";
 import ApproveTab from "../history/historytabs/ApproveTab";
 import { CreditCard } from "lucide-react";
 import DropdownSelect from "./Dropdown";
-import {CalendarDays} from "lucide-react"
+import { CalendarDays } from "lucide-react";
 
 const paymentOptions = [
   { value: "stripe", label: "Stripe" },
@@ -33,6 +33,15 @@ const data = [
     status: "Manually Paid",
     amount1: "NRP 20,000",
   },
+  {
+    id: 2,
+    action: "Tech Corp",
+    startDate: "2023-02-15",
+    endDate: "2023-07-15",
+    amount: "NRP 15,000",
+    status: "Pending",
+    amount1: "NRP 30,000",
+  },
 ];
 
 const columns = [
@@ -41,8 +50,8 @@ const columns = [
   { accessorKey: "startDate", header: "CLIENT NAME" },
   { accessorKey: "endDate", header: "PAYMENT GATE" },
   { accessorKey: "amount", header: "PAYMENT METHOD" },
-  { accessorKey: "amount1", header: "AMOUNT(NRP)" },
   { accessorKey: "status", header: "STATUS" },
+  { accessorKey: "amount1", header: "AMOUNT(NRP)" },
 ];
 
 const History = () => {
@@ -118,69 +127,59 @@ const History = () => {
         ))}
       </nav>
 
-      {/* Conditional Content Based on Active Tab */}
       {activeTab === "All" && (
         <>
           {/* Filters Section */}
-          {/* Filters Section */}
           <div className="grid grid-cols-3 gap-x-4 gap-y-3 mb-6 w-[1563px]">
+            <div className="relative">
+              <DropdownSelect
+                options={paymentOptions}
+                label="TRANSFER DIRECTION"
+                icon={CreditCard}
+                onSelect={handleSelect}
+              />
+            </div>
 
-  {/* Dropdown 1 */}
-  <div className="relative">
-    <DropdownSelect
-      options={paymentOptions}
-      label="TRANSFER DIRECTION"
-      icon={CreditCard}
-      onSelect={handleSelect}
-    />
-  </div>
+            <div className="relative">
+              <DropdownSelect
+                options={paymentOptions}
+                label="PAYMENT GATEWAY"
+                icon={CreditCard}
+                onSelect={handleSelect}
+              />
+            </div>
 
-  {/* Dropdown 2 */}
-  <div className="relative">
-    <DropdownSelect
-      options={paymentOptions}
-      label="PAYMENT GATEWAY"
-      icon={CreditCard}
-      onSelect={handleSelect}
-    />
-  </div>
+            <div className="relative">
+              <label className="absolute top-2 left-[52px] text-[#828282] text-xs -ms-10">
+                TMS TRANSACTION ID
+              </label>
+              <div className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white">
+                <span className="-ms-9">TMS TRANSCATION ID</span>
+              </div>
+            </div>
 
-  {/* Date Input 1 */}
-  <div className="relative">
-    <label className="absolute top-2 left-[52px] text-[#828282] text-xs -ms-10">
-      TMS TRANSACTION ID
-    </label>
-    <div
-      className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white "
-    > <span className="-ms-9"> TMS TRANSCATION ID </span></div>
-  </div>
+            <div className="relative">
+              <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
+              <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
+                BUSINESS DATE FROM
+              </label>
+              <input
+                type="date"
+                className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white"
+              />
+            </div>
 
-  {/* Date Input 2 */}
-  <div className="relative">
-    <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
-    <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
-      BUSINESS DATE TO
-    </label>
-    <input
-      type="date"
-      className="bg-[#141414]
-       border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white "
-    />
-  </div>
-
-  {/* Date Input 3 */}
-  <div className="relative">
-    <UilCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
-    <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
-      BUSINESS DATE TO
-    </label>
-    <input
-      type="date"
-      className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white"
-    />
-  </div>
-</div>
-          
+            <div className="relative">
+              <UilCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
+              <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
+                BUSINESS DATE TO
+              </label>
+              <input
+                type="date"
+                className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white"
+              />
+            </div>
+          </div>
 
           {/* Filter Buttons */}
           <div className="flex gap-4 mb-6">
@@ -217,7 +216,7 @@ const History = () => {
                 {table.getRowModel().rows.map((row) => (
                   <tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="border border-black px-4 py-2">
+                      <td key={cell.id} className="border border-black px-4 py-2 text-gray-400">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
