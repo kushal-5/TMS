@@ -16,7 +16,7 @@ function App() {
         {["net", "buy", "sell"].map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 mx-2 ${activeTab === tab ? "border-b-2 border-white" : ""}`}
+            className={`px-4 py-2 mx-2 ${activeTab === tab ? "border-b-2 border-white" : "text-[#828282]"}`}
             onClick={() => setActiveTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)} Information

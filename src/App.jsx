@@ -5,7 +5,7 @@ import "./App.css";
 import Profile from "./pages/profile.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import Information from "./components/information/Information.jsx"
-
+import History from "./components/history/History.jsx"
 import { BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
 import SignInPage from "./pages/SignInPages/SignInPage";
 import ForgotPassword from "./pages/SignInPages/ForgetPasswordPage";
@@ -144,6 +144,7 @@ function App() {
             <Route path="/trade_data" element={<TradeData />}/>
             <Route path="/historic_trade" element={<TableWithPagination />}/>
             <Route path="/information" element={<Information />} />
+            <Route path="/history" element={<History />} />
 
           </Route>
           {/* Catch-All Route (404 Handling) */}

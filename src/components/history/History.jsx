@@ -8,10 +8,20 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { UilCalendarAlt } from "@iconscout/react-unicons";
-import Export from "../../../assets/export.svg";
-import SucessTab from "../info/sellTab/SucessTab";
-import ProgressTab from "../info/sellTab/ProgressTab"; 
-import ApproveTab from "../info/sellTab/ApproveTab"
+import Export from "../../assets/export.svg";
+import SuccessTab from "../history/historytabs/SucessTab";
+import ProgressTab from "../history/historytabs/ProgressTab"; 
+import ApproveTab from "../history/historytabs/ApproveTab";
+import { CreditCard } from "lucide-react";
+import DropdownSelect from "./Dropdown";
+import {CalendarDays} from "lucide-react"
+
+const paymentOptions = [
+  { value: "stripe", label: "Stripe" },
+  { value: "paypal", label: "PayPal" },
+  { value: "square", label: "Square" },
+  { value: "razorpay", label: "Razorpay" },
+];
 
 const data = [
   {
@@ -23,21 +33,21 @@ const data = [
     status: "Manually Paid",
     amount1: "NRP 20,000",
   },
- ];
+];
 
 const columns = [
   { accessorKey: "id", header: "S.N" },
-  { accessorKey: "action", header: "ACTION" },
-  { accessorKey: "startDate", header: "BUSINESS DATE" },
-  { accessorKey: "endDate", header: "SETTLEMENT DATE" },
-  { accessorKey: "amount", header: "TOTAL AMOUNT (NRP)" },
-  { accessorKey: "amount1", header: "AMOUNT PENDING (NRP)" },
-  { accessorKey: "status", header: "PAYMENT STATUS" },
+  { accessorKey: "action", header: "CLIENT" },
+  { accessorKey: "startDate", header: "CLIENT NAME" },
+  { accessorKey: "endDate", header: "PAYMENT GATE" },
+  { accessorKey: "amount", header: "PAYMENT METHOD" },
+  { accessorKey: "amount1", header: "AMOUNT(NRP)" },
+  { accessorKey: "status", header: "STATUS" },
 ];
 
-const SellInfo = () => {
+const History = () => {
   const [rowsPerPage, setRowsPerPage] = useState(2);
-  const [activeTab, setActiveTab] = useState("Payment Due");
+  const [activeTab, setActiveTab] = useState("All");
 
   const table = useReactTable({
     data,
@@ -50,6 +60,10 @@ const SellInfo = () => {
       },
     },
   });
+
+  const handleSelect = (selectedOption) => {
+    console.log("Selected payment gateway:", selectedOption);
+  };
 
   const exportToPDF = () => {
     const doc = new jsPDF();
@@ -91,10 +105,10 @@ const SellInfo = () => {
     <div className="w-full p-6 -mt-6">
       {/* Tab Navigation */}
       <nav className="flex flex-wrap gap-3 mb-6">
-        {["Payment Due","Approved", "Success", "In Progress"].map((tab) => (
+        {["All", "Success", "Pending", "Failed"].map((tab) => (
           <button
             key={tab}
-            className={`px-5 py-2 w-[150px] h-[48px] ${
+            className={`px-5 py-2 w-[100px] h-[48px] ${
               activeTab === tab ? "bg-[#01BAEF] text-white" : "bg-black text-[#828282]"
             } text-lg`}
             onClick={() => setActiveTab(tab)}
@@ -102,36 +116,71 @@ const SellInfo = () => {
             {tab}
           </button>
         ))}
-        
       </nav>
 
       {/* Conditional Content Based on Active Tab */}
-      {activeTab === "Payment Due" && (
+      {activeTab === "All" && (
         <>
-          {/* Date Filters */}
-          <div className="grid grid-cols-1 gap-6 mb-6">
-            <div className="relative">
-              <UilCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
-              <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
-                BUSINESS DATE FROM
-              </label>
-              <input
-                type="date"
-                className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-[399px] h-[63px] text-white"
-              />
-            </div>
+          {/* Filters Section */}
+          {/* Filters Section */}
+          <div className="grid grid-cols-3 gap-x-4 gap-y-3 mb-6 w-[1563px]">
 
-            <div className="relative">
-              <UilCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
-              <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
-                BUSINESS DATE TO
-              </label>
-              <input
-                type="date"
-                className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-[399px] h-[63px] text-white"
-              />
-            </div>
-          </div>
+  {/* Dropdown 1 */}
+  <div className="relative">
+    <DropdownSelect
+      options={paymentOptions}
+      label="TRANSFER DIRECTION"
+      icon={CreditCard}
+      onSelect={handleSelect}
+    />
+  </div>
+
+  {/* Dropdown 2 */}
+  <div className="relative">
+    <DropdownSelect
+      options={paymentOptions}
+      label="PAYMENT GATEWAY"
+      icon={CreditCard}
+      onSelect={handleSelect}
+    />
+  </div>
+
+  {/* Date Input 1 */}
+  <div className="relative">
+    <label className="absolute top-2 left-[52px] text-[#828282] text-xs -ms-10">
+      TMS TRANSACTION ID
+    </label>
+    <div
+      className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white "
+    > <span className="-ms-9"> TMS TRANSCATION ID </span></div>
+  </div>
+
+  {/* Date Input 2 */}
+  <div className="relative">
+    <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
+    <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
+      BUSINESS DATE TO
+    </label>
+    <input
+      type="date"
+      className="bg-[#141414]
+       border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white "
+    />
+  </div>
+
+  {/* Date Input 3 */}
+  <div className="relative">
+    <UilCalendarAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-[#828282]" />
+    <label className="absolute top-2 left-[52px] text-[#828282] text-sm">
+      BUSINESS DATE TO
+    </label>
+    <input
+      type="date"
+      className="bg-[#141414] border border-[#4F4F4F] p-2 pt-6 pl-12 rounded-lg w-full h-[63px] text-white"
+    />
+  </div>
+</div>
+          
 
           {/* Filter Buttons */}
           <div className="flex gap-4 mb-6">
@@ -242,13 +291,12 @@ const SellInfo = () => {
         </>
       )}
 
-      {/* Success Tab */}
-      {activeTab === "Success" && <SucessTab />}
-      {activeTab === "Approved" && <ApproveTab />}
-      {/* In Progress Tab */}
-      {activeTab === "In Progress" && <ProgressTab />}
+      {/* Tab Contents */}
+      {activeTab === "Success" && <SuccessTab />}
+      {activeTab === "Pending" && <ProgressTab />}
+      {activeTab === "Failed" && <ApproveTab />}
     </div>
   );
 };
 
-export default SellInfo;
+export default History;
